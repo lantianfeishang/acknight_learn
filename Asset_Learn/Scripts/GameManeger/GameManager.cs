@@ -71,4 +71,9 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0;
         }
     }
+    public void QuitGame()
+    {
+        Time.timeScale = 0;
+        Application.Quit();
+    }
 }
