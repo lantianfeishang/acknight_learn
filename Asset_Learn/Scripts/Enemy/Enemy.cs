@@ -24,20 +24,18 @@ public class Enemy : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (isStop)
-        {
-            if(delTimer < timer)
-            {
-                delTimer += Time.deltaTime;
-                return;
-            }
-            delTimer = 0;
-            agentHp.GetHurt(hurt);
-        }
-        else
+        if (!isStop)
         {
             delTimer = 0;
+            return;
         }
+        if (delTimer < timer)
+        {
+            delTimer += Time.deltaTime;
+            return;
+        }
+        delTimer = 0;
+        agentHp.GetHurt(hurt);
     }
 
     public void GetHurt(float hurt)

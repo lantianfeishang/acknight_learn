@@ -30,7 +30,7 @@ public class EnemyMove : MonoBehaviour
         transform.position = vector3;
 
         map = (int[,])GameManager.instance.map.Clone();
-        FixMovePath(blueDoor[0],redDoor);
+        FixMovePath(blueDoor[0], redDoor);
 
         thisEnemy = gameObject.GetComponent<Enemy>();
     }
@@ -38,10 +38,10 @@ public class EnemyMove : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Cube cube = other.GetComponent<Cube>();
-        if (cube!=null && !cubes.Contains(cube))
+        if (cube != null && !cubes.Contains(cube))
         {
             cubes.Add(cube);
-            if(cube == blueDoor[0])
+            if (cube == blueDoor[0])
             {
                 blueDoor.Remove(blueDoor[0]);
                 hasGone = true;
@@ -52,11 +52,11 @@ public class EnemyMove : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         Cube cube = other.GetComponent<Cube>();
-        if (cube!= null && cubes.Contains(cube))
+        if (cube != null && cubes.Contains(cube))
         {
             cubes.Remove(cube);
             //已经到记录点了
-            if(hasGone)
+            if (hasGone)
             {
                 hasGone = false;
                 if (blueDoor.Count == 0)
@@ -73,7 +73,7 @@ public class EnemyMove : MonoBehaviour
     private void FixedUpdate()
     {
         //如果地图改变，修改路径
-        if(!IsArraySame(map,GameManager.instance.map))
+        if (!IsArraySame(map, GameManager.instance.map))
         {
             map = (int[,])GameManager.instance.map.Clone();
             FixMovePath(blueDoor[0], thisCube);
@@ -85,41 +85,42 @@ public class EnemyMove : MonoBehaviour
             x = cubes[0].x;
             y = cubes[0].y;
         }
-        //存在路径地图，即可移动
-        if (x!= -1 && y!=-1)
+        //不存在地图
+        if (x == -1 || y==-1)
         {
-            //抵达了，换目的地
-            if(nextCube == null || nextCube == thisCube)
-            {
-                int xMax = movePath.GetLength(0) - 1;//可取最大值
-                int yMax = movePath.GetLength(1) - 1;
+            return;
+        }
+        //抵达了，换目的地
+        if (nextCube == null || nextCube == thisCube)
+        {
+            int xMax = movePath.GetLength(0) - 1;//可取最大值
+            int yMax = movePath.GetLength(1) - 1;
 
-                int nowPath = movePath[y, x];
+            int nowPath = movePath[y, x];
 
-                if (x > 0 && movePath[y, x - 1] == nowPath + 1)
-                {
-                    nextCube = thisCube.GetComponent<Cube>().westCube;
-                }
-                else if(x < xMax && movePath[y, x + 1] == nowPath + 1)
-                {
-                    nextCube = thisCube.GetComponent<Cube>().eastCube;
-                }
-                else if (y > 0 && movePath[y - 1, x] == nowPath + 1)
-                {
-                    nextCube = thisCube.GetComponent<Cube>().northCube;
-                }
-                else if(y < yMax && movePath[y + 1, x] == nowPath + 1)
-                {
-                    nextCube = thisCube.GetComponent<Cube>().southCube;
-                }
-            }
-            //移动。若需要于某点等待，改这里
-            if (nextCube != null)
+            if (x > 0 && movePath[y, x - 1] == nowPath + 1)
             {
-                Vector3 nextV3 = nextCube.transform.position;
-                nextV3.y = transform.position.y;
-                transform.position = Vector3.MoveTowards(transform.position, nextV3, moveSpeedNow * Time.fixedDeltaTime);
+                nextCube = thisCube.GetComponent<Cube>().westCube;
             }
+            else if (x < xMax && movePath[y, x + 1] == nowPath + 1)
+            {
+                nextCube = thisCube.GetComponent<Cube>().eastCube;
+            }
+            else if (y > 0 && movePath[y - 1, x] == nowPath + 1)
+            {
+                nextCube = thisCube.GetComponent<Cube>().northCube;
+            }
+            else if (y < yMax && movePath[y + 1, x] == nowPath + 1)
+            {
+                nextCube = thisCube.GetComponent<Cube>().southCube;
+            }
+        }
+        //移动。若需要于某点等待，改这里
+        if (nextCube != null)
+        {
+            Vector3 nextV3 = nextCube.transform.position;
+            nextV3.y = transform.position.y;
+            transform.position = Vector3.MoveTowards(transform.position, nextV3, moveSpeedNow * Time.fixedDeltaTime);
         }
     }
     private bool IsArraySame(int[,] array1, int[,] array2)

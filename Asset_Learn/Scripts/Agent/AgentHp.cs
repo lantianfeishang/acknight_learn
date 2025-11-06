@@ -15,16 +15,17 @@ public class AgentHp : MonoBehaviour
     }
     private void IfDead()
     {
-        if (HpNow <= 0)
+        if(HpNow > 0)
         {
-            if (gameObject.GetComponent<AgentScope>() != null)
-            {
-                AgentScope scope = gameObject.GetComponent<AgentScope>();
-                scope.cube.agent = null;
-                scope.cube = null;
-                gameObject.SetActive(false);
-                AgentPrefabs.instance.hasDownAgentPerfabs.Remove(gameObject);
-            }
+            return;
+        }
+        if (gameObject.GetComponent<AgentScope>() != null)
+        {
+            AgentScope scope = gameObject.GetComponent<AgentScope>();
+            scope.cube.agent = null;
+            scope.cube = null;
+            gameObject.SetActive(false);
+            AgentPrefabs.instance.hasDownAgentPerfabs.Remove(gameObject);
         }
     }
 }

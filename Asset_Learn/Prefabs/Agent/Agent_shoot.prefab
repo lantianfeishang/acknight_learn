@@ -455,6 +455,7 @@ GameObject:
   - component: {fileID: 7969767014390489536}
   - component: {fileID: 3053167923998820970}
   - component: {fileID: 6930882011406269001}
+  - component: {fileID: 1104147396875574167}
   m_Layer: 9
   m_Name: Agent_shoot
   m_TagString: Agent
@@ -609,6 +610,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1104147396875574167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3252849574142577899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54ded833027f72c41ac25f290c64987b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Hp: 100
 --- !u!1 &3350693736182215691
 GameObject:
   m_ObjectHideFlags: 0
@@ -1638,7 +1652,7 @@ RectTransform:
   m_Father: {fileID: 7421630460704023535}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
