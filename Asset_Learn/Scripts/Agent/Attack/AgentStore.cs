@@ -10,14 +10,15 @@ public class AgentStore : MonoBehaviour
     }
     private void Update()
     {
-        if(!hasFix && GetComponent<AgentScope>().cube != null)
+        if(hasFix || GetComponent<AgentScope>().cube == null)
         {
-            cube = GetComponent<AgentScope>().cube;
-            if (cube != null)
-            {
-                GameManager.instance.map[cube.y, cube.x] = (int)GameManager.mapState.store;
-                hasFix = true;
-            }
+            return;
+        }
+        cube = GetComponent<AgentScope>().cube;
+        if (cube != null)
+        {
+            GameManager.instance.map[cube.y, cube.x] = (int)GameManager.mapState.store;
+            hasFix = true;
         }
     }
     private void OnDisable()
@@ -26,7 +27,7 @@ public class AgentStore : MonoBehaviour
         {
             GameManager.instance.map[cube.y, cube.x] = cube.cubeType;
         }
+        cube.agent = null;
         cube = null;
-        hasFix = false;
     }
 }

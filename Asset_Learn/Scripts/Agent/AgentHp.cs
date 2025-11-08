@@ -19,13 +19,14 @@ public class AgentHp : MonoBehaviour
         {
             return;
         }
-        if (gameObject.GetComponent<AgentScope>() != null)
+        if(gameObject.GetComponent<AgentScope>() == null)
         {
-            AgentScope scope = gameObject.GetComponent<AgentScope>();
-            scope.cube.agent = null;
-            scope.cube = null;
-            gameObject.SetActive(false);
-            AgentPrefabs.instance.hasDownAgentPerfabs.Remove(gameObject);
+            return;
         }
+        AgentScope scope = gameObject.GetComponent<AgentScope>();
+        scope.cube.agent = null;
+        scope.cube = null;
+        gameObject.SetActive(false);
+        AgentPrefabs.instance.hasDownAgentPerfabs.Remove(gameObject);
     }
 }

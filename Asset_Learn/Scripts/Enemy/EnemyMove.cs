@@ -51,22 +51,21 @@ public class EnemyMove : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         Cube cube = other.GetComponent<Cube>();
-        if (cube != null && cubes.Contains(cube))
-        {
-            cubes.Remove(cube);
-            //已经到记录点了
-            if (hasGone)
-            {
-                hasGone = false;
-                if (blueDoor.Count == 0)
-                {
-                    GameManager.instance.HomeGetHart();
-                    Destroy(gameObject);
-                    return;
-                }
-                FixMovePath(blueDoor[0], thisCube);
-            }
+        if (cube == null || !cubes.Contains(cube)){
             return;
+        }
+        cubes.Remove(cube);
+        //已经到记录点了
+        if (hasGone)
+        {
+            hasGone = false;
+            if (blueDoor.Count == 0)
+            {
+                GameManager.instance.HomeGetHart();
+                Destroy(gameObject);
+                return;
+            }
+            FixMovePath(blueDoor[0], thisCube);
         }
     }
     private void FixedUpdate()

@@ -10,11 +10,13 @@ public class AgentPrefabs : MonoBehaviour
         instance = this;
     }
 
+    [SerializeField] Transform agentInitPosition;//干员初始位置
     [SerializeField] GameObject[] agentPerfabs;//干员模型
-    public List<GameObject> hasDownAgentPerfabs = new List<GameObject>();//已经放下的干员
+    public List<GameObject> hasDownAgentPerfabs = new();//已经放下的干员
     private GameObject thisAgentPerfabs = null;//鼠标上的干员
     private Cube thisCube = null;//鼠标指向的方块
     private bool hasAgentClick = false;//是否点击干员
+    private AgentScope scope;//干员攻击范围，并判断是否被拖动过
 
     public GameObject highLight;//上下左右标
     private void Start()
@@ -32,12 +34,9 @@ public class AgentPrefabs : MonoBehaviour
             return;
         }
         thisAgentPerfabs = agentPerfabs[agentNumber];
-        thisAgentPerfabs.gameObject.SetActive(true);
-        AgentScope scope = thisAgentPerfabs.GetComponent<AgentScope>();
-        scope.OpenScope();
-        scope.CloseFunction();
-        Time.timeScale = 0.1f;
+        thisAgentPerfabs.transform.position = agentInitPosition.position;
     }
+    
     public void AgentDrag()
     {
         //没选择关于 或 已经放下
@@ -51,12 +50,20 @@ public class AgentPrefabs : MonoBehaviour
             return;
         }
 
+        if(scope == null)
+        {
+            thisAgentPerfabs.SetActive(true);
+            scope = thisAgentPerfabs.GetComponent<AgentScope>();
+            scope.OpenScope();
+            scope.CloseFunction();
+            Time.timeScale = 0.1f;
+        }
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//射线
-        RaycastHit hit;//射线着点
-        if(Physics.Raycast(ray,out hit,100,1<<0 | 1<<7))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100, 1 << 0 | 1 << 7))
         {
             Cube cube = hit.collider.gameObject.GetComponent<Cube>();
-            if(cube != null && cube.agent == null && cube.cubeType == thisAgentPerfabs.GetComponent<AgentScope>().agentType)
+            if (cube != null && cube.agent == null && cube.cubeType == thisAgentPerfabs.GetComponent<AgentScope>().agentType)
             {
                 Vector3 position = cube.transform.position;
                 position.y = hit.point.y;
@@ -80,8 +87,7 @@ public class AgentPrefabs : MonoBehaviour
         }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//射线
-        RaycastHit hit;//射线着点
-        if (Physics.Raycast(ray, out hit,100, 1 << 0 | 1 << 7))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100, 1 << 0 | 1 << 7))
         {
             Cube cube = hit.collider.gameObject.GetComponentInParent<Cube>();
             if (cube != null && cube.agent == null && cube.cubeType == thisAgentPerfabs.GetComponent<AgentScope>().agentType)
@@ -89,11 +95,14 @@ public class AgentPrefabs : MonoBehaviour
                 HighLightOn(thisAgentPerfabs.transform.position);
                 hasAgentDown = true;
                 thisCube = cube;
+                scope = null;
                 return;
             }
         }
-
-        thisAgentPerfabs.gameObject.SetActive(false);
+        scope.CloseScope();
+        scope.OpenFunction();
+        scope = null;
+        thisAgentPerfabs.SetActive(false);
         thisAgentPerfabs = null;
         Time.timeScale = 1;
     }
@@ -140,15 +149,14 @@ public class AgentPrefabs : MonoBehaviour
     public void TowardsDragEnd()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//射线
-        RaycastHit hit;//射线着点
 
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            if(hit.collider.CompareTag("Finish"))
+            if (hit.collider.CompareTag("Finish"))
             {
                 HighLightOff();
 
-                thisAgentPerfabs.gameObject.SetActive(false);
+                thisAgentPerfabs.SetActive(false);
                 thisAgentPerfabs = null;
 
                 Time.timeScale = 1;
@@ -188,9 +196,8 @@ public class AgentPrefabs : MonoBehaviour
             }
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//射线
-            RaycastHit hit;//射线着点
 
-            if(Physics.Raycast(ray, out hit,100,1<<0 | 1<<5 | 1<<9))
+            if (Physics.Raycast(ray, out RaycastHit hit, 100, 1 << 0 | 1 << 5 | 1 << 9))
             {
                 if (hasAgentClick)
                 {
@@ -206,16 +213,13 @@ public class AgentPrefabs : MonoBehaviour
                     hasAgentClick = false;
                     Time.timeScale = 1;
                 }
-                else
+                else if (hit.collider.CompareTag("Agent"))
                 {
-                    if (hit.collider.CompareTag("Agent"))
-                    {
-                        Time.timeScale = 0.1f;
+                    Time.timeScale = 0.1f;
 
-                        thisAgentPerfabs = hit.collider.gameObject;
-                        hasAgentClick = true;
-                        HighLightOn(hit.collider.transform.position);
-                    }
+                    thisAgentPerfabs = hit.collider.gameObject;
+                    hasAgentClick = true;
+                    HighLightOn(hit.collider.transform.position);
                 }
             }
         }
