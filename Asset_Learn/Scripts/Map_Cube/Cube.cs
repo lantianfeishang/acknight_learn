@@ -12,5 +12,6 @@ public class Cube : MonoBehaviour
         ground = 1,
         platform = 2,
         stone = 5,
+        trap = 6,
     }
 }

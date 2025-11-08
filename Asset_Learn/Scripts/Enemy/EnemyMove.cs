@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class EnemyMove : MonoBehaviour
 {
-    private List<Cube> blueDoor = new();//将入的蓝门
-    private Cube redDoor;//出的红门。实际上，记录的是门下方的方块
+    [SerializeField] List<Cube> blueDoor = new();//将入的蓝门
+    [SerializeField] Cube redDoor;//出的红门。实际上，记录的是门下方的方块
 
     private int x = -1, y = -1;//当前的坐标
     private Cube thisCube = null;//脚下方块
@@ -18,10 +18,8 @@ public class EnemyMove : MonoBehaviour
     private float moveSpeedNow;//当前速度，为被阻挡准备
 
     private Enemy thisEnemy;
-    public void Init(List<Cube> blue, Cube red)
+    public void Awake()
     {
-        blueDoor.AddRange(blue);
-        redDoor = red;
         moveSpeedNow = moveSpeed;
 
         //初始位置
@@ -33,6 +31,7 @@ public class EnemyMove : MonoBehaviour
         FixMovePath(blueDoor[0], redDoor);
 
         thisEnemy = gameObject.GetComponent<Enemy>();
+        
     }
     //获取脚下的方块，以明确当前坐标
     private void OnTriggerEnter(Collider other)

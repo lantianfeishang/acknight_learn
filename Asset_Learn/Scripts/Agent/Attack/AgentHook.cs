@@ -40,7 +40,16 @@ public class AgentHook : MonoBehaviour
         if(delUseful < usefulTime)
         {
             delUseful += Time.deltaTime;
-            enemyRb.velocity = -transform.forward * usefulSpeed;
+            if (enemy != null && enemy.activeSelf)
+            {
+                enemyRb.velocity = -transform.forward * usefulSpeed;
+            }
+            else
+            {
+                delUseful = usefulTime;
+                enemyRb = null;
+                enemy = null;
+            }
         }
         else if (enemy != null)
         {

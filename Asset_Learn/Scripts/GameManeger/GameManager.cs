@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] int homeHp;
     public int homeHpNow;
 
-    public int wholeEnemy;
+    [SerializeField] int wholeEnemy;
     public int nowEnemyDead;
 
     public TextMeshProUGUI homeHpText;
@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
         instance = this;
         homeHpNow = homeHp;
         homeHpText.text = homeHpNow.ToString() + "/" + homeHp.ToString();
+        nowEnemyDead = 0;
+        enemyText.text = 0 + "/" + wholeEnemy.ToString();
     }
     public enum mapState
     {
@@ -54,18 +56,12 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0;
         }
     }
-    public void GetWholeEnemy(int number)
-    {
-        wholeEnemy = number;
-        nowEnemyDead = 0;
-        enemyText.text = 0 + "/" + wholeEnemy.ToString();
-    }
     public void EnemyDead()
     {
         nowEnemyDead++;
         enemyText.text = nowEnemyDead.ToString() + "/" + wholeEnemy.ToString();
         //敌人全灭 或 敌人死的 加 进基地的数量等于总量
-        if (nowEnemyDead == wholeEnemy && (nowEnemyDead + homeHp - homeHpNow) == wholeEnemy)
+        if (nowEnemyDead == wholeEnemy || (nowEnemyDead + homeHp - homeHpNow) == wholeEnemy)
         {
             successText.gameObject.SetActive(true);
             Time.timeScale = 0;
